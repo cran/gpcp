@@ -1,0 +1,123 @@
+
+---
+title: "Genomic Prediction of Cross Performance with gpcp"
+author: "Marlee Labroo, Christine Nyaga, Lukas Mueller"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Genomic Prediction of Cross Performance with gpcp}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# Introduction
+
+This vignette demonstrates how to use the `gpcp` package to perform genomic prediction of cross performance using genotype and phenotype data. This method processes data in several steps, including loading the necessary software, converting genotype data, processing phenotype data, fitting mixed models, and predicting cross performance based on weighted marker effects.
+
+The package is particularly useful for users working with polyploid species, and it integrates with the `sommer`, `AGHmatrix`, and `snpStats` packages for efficient model fitting and genomic analysis.
+
+# Installing the gpcp Package
+
+If you haven't installed the `gpcp` package yet, you can do so by following these steps:
+
+```r
+# Install devtools if you don't have it
+install.packages("devtools")
+
+# Install BiocManager in order to install VariantAnnotatiion and snpStats
+if (!require("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+#Install VariantAnnotation and snpStats
+BiocManager::install("VariantAnnotation")
+BiocManager::install("snpStats")
+
+# Install gpcp from your local repository or GitHub
+devtools::install_github("cmn92/gpcp")
+
+```
+
+# Getting Started
+
+The main function in this package is `runGPCP()`, which predicts the performance of genomic crosses. To run this function, you'll need two main input files:
+1. A phenotype file, which is typically a CSV file containing the phenotypic data.
+2. A genotype file, which can be in VCF or HapMap format.
+
+# Example Workflow
+
+Let’s walk through a simple example to predict cross performance using the provided phenotype and genotype data.
+
+## Step 1: Load the Required Data
+
+Before running `runGPCP`, load the phenotype data from a CSV file and specify the genotype file path.
+
+```r
+# Load phenotype data
+phenotypeFile <- read.csv("~/gpcp/data/phenotypeFile.csv")
+
+# Specify the genotype file path (VCF or HapMap format)
+genotypeFile <- "~/gpcp/data/genotypeFile_Chr9and11.vcf"
+```
+
+## Step 2: Define the Necessary Inputs
+
+You will need to specify several inputs such as the genotypes column, traits to predict, and other variables such as weights, fixed effects, and ploidy.
+
+```r
+# Define inputs
+genotypes <- "Accession"  # Column name for genotype IDs in phenotype data
+traits <- c("YIELD", "DMC")  # Traits to predict
+weights <- c(3, 1)  # Weights for each trait
+userFixed <- c("LOC", "REP")  # Fixed effects
+Ploidy <- 2  # Ploidy level
+NCrosses <- 150  # Number of crosses to predict
+```
+
+## Step 3: Run the Genomic Prediction
+
+Now that we have the necessary inputs, we can run the `runGPCP()` function to predict cross performance.
+
+```r
+# Run genomic prediction of cross performance
+finalcrosses <- runGPCP(
+    phenotypeFile = phenotypeFile,
+    genotypeFile = genotypeFile,
+    genotypes = genotypes,
+    traits = paste(traits, collapse = ","),
+    weights = weights,
+    userFixed = paste(userFixed, collapse = ","),
+    Ploidy = Ploidy,
+    NCrosses = NCrosses
+)
+```
+
+## Step 4: View the Results
+
+The output of the `runGPCP()` function is a data frame that contains the predicted cross performance. You can view the top predicted crosses like this:
+
+```r
+# View the predicted crosses
+head(finalcrosses)
+```
+
+The resulting data frame contains the following columns:
+- `Parent1`: The first parent of the cross.
+- `Parent2`: The second parent of the cross.
+- `CrossPredictedMerit`: The predicted merit of the cross.
+- `P1Sex` and `P2Sex`: Optional. If sex information is provided, the sexes of the parents are included.
+
+# Details of the Process
+
+The `runGPCP()` function performs the following steps internally:
+1. **Read the genotype and phenotype data**: The genotype file is converted into a matrix of allele counts, and the phenotype data is standardized.
+2. **Fit mixed models**: The `sommer` package is used to fit mixed models based on user-defined fixed and random effects.
+3. **Predict cross performance**: Marker effects are calculated and weighted to predict the performance of crosses, and the best crosses are identified.
+
+# References
+
+The methodology behind the `gpcp` package is based on the following references:
+- Xiang, J., et al. (2016). "Mixed Model Methods for Genomic Prediction." _Nature Genetics_.
+- Batista, L., et al. (2021). "Genetic Prediction and Relationship Matrices." _Theoretical and Applied Genetics_.
+
+# Conclusion
+
+The `gpcp` package provides a flexible and efficient framework for predicting genomic cross performance in both diploid and polyploid species. With its ability to handle multiple traits, fixed effects, and random effects, this package is ideal for breeders and geneticists looking to maximize cross potential using genomic data.

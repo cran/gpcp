@@ -1,0 +1,36 @@
+#' Example Phenotype Data
+#'
+#' This is a sample phenotype dataset used for genomic prediction.
+#'
+#' @format A data frame with 24 columns:
+#' \describe{
+#'   \item{ATW}{Description of ATW}
+#'   \item{AUDPC_YAD}{Area Under Disease Progress Curve for YAD}
+#'   \item{AUDPC_YMV}{Area Under Disease Progress Curve for YMV}
+#'   \item{Accession}{Genotype IDs for each individual}
+#'   \item{Block}{Block information}
+#'   \item{DMC}{Dry Matter Content values}
+#'   \item{Design}{Experimental design}
+#'   \item{LOC}{Location of the trials}
+#'   \item{NPH}{Number of Plants Harvested}
+#'   \item{OXBI}{Oxidation Index}
+#'   \item{Oxint180Minutes}{Oxidation intensity after 180 minutes}
+#'   \item{PLOT}{Plot number}
+#'   \item{REP}{Replication number}
+#'   \item{Settweight}{Weight of the planting setts}
+#'   \item{TTNPL}{Total Tuber Number per Plant}
+#'   \item{TTWPL}{Total Tuber Weight per Plant}
+#'   \item{Trial}{Trial name or ID}
+#'   \item{Vigor}{Plant vigor score}
+#'   \item{YIELD}{Yield values}
+#'   \item{Year}{Year of the experiment}
+#'   \item{Yield.per.plot..kg.}{Yield per plot in kilograms}
+#'   \item{Yield_udj}{Unadjusted Yield}
+#'   \item{rAUDPC_YAD}{Relative AUDPC for YAD}
+#'   \item{rAUDPC_YMV}{Relative AUDPC for YMV}
+#' }
+#' @source Generated for the gpcp package example
+#' @examples
+#' data(phenotypeFile)
+#' head(phenotypeFile)
+"phenotypeFile"
